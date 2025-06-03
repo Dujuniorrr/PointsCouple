@@ -2,126 +2,80 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Sistema de Pontos do Casal 💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Pontos do Casal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --bg: #fff0f5;
-      --primary: #d36ba6;
-      --secondary: #f7cfe3;
-      --text: #3d2c3c;
-      --accent: #ff9ac5;
-    }
-
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      padding: 40px;
-      max-width: 800px;
-      margin: auto;
-    }
-
-    h1 {
-      text-align: center;
-      color: var(--primary);
-      font-size: 2.5em;
-      margin-bottom: 30px;
-    }
-
-    .section {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-
-    label, select, input, button {
-      margin-top: 10px;
-      margin-right: 10px;
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 1em;
-    }
-
-    input[type="text"], input[type="number"], select {
-      background-color: var(--secondary);
-    }
-
-    button {
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background-color: var(--accent);
-    }
-
-    h2 {
-      color: var(--primary);
-    }
-
-    ul {
-      list-style-type: heart;
-      padding-left: 20px;
-    }
-
-    li::marker {
-      content: "💖 ";
-    }
-
-    h3 {
-      color: var(--text);
-      margin-top: 20px;
-    }
-
-    .points {
-      font-weight: bold;
-      color: var(--primary);
+    html {
+      scroll-behavior: smooth;
     }
   </style>
 </head>
-<body>
-  <h1>Sistema de Pontos do Casal 💑💖</h1>
+<body class="bg-rose-50 text-zinc-800 font-sans min-h-screen">
 
-  <div class="section">
-    <h2>✨ Adicionar Pontos ✨</h2>
-    <select id="userSelect">
-      <option value="Giovanna">Giovanna 🦊</option>
-      <option value="Junior">Junior 🐺</option>
-    </select>
-    <input type="number" id="pointsInput" placeholder="🔢 Pontos" />
-    <input type="text" id="reasonInput" placeholder="📝 Motivo (ex: ajudou com algo 💕)" />
-    <button onclick="addPoints()">➕ Adicionar Pontos 💗</button>
-  </div>
+  <!-- Navbar -->
+  <nav class="bg-white shadow fixed w-full z-10">
+    <div class="max-w-4xl mx-auto flex justify-between items-center px-6 py-3">
+      <span class="text-rose-600 font-bold text-xl">💖 Casal Points</span>
+      <ul class="flex gap-4 text-sm text-zinc-700 font-medium">
+        <li><a href="#add" class="hover:text-rose-500">Adicionar</a></li>
+        <li><a href="#rewards" class="hover:text-rose-500">Recompensas</a></li>
+        <li><a href="#redeem" class="hover:text-rose-500">Resgatar</a></li>
+        <li><a href="#status" class="hover:text-rose-500">Status</a></li>
+      </ul>
+    </div>
+  </nav>
 
-  <div class="section">
-    <h2>🎁 Recompensas</h2>
-    <input type="text" id="rewardName" placeholder="🏆 Nome da Recompensa (ex: Jantar 🍷)" />
-    <input type="number" id="rewardCost" placeholder="💰 Custo em Pontos" />
-    <button onclick="addReward()">💝 Cadastrar Recompensa</button>
+  <!-- Conteúdo principal -->
+  <div class="max-w-4xl mx-auto pt-24 p-6 space-y-12">
+    <header class="text-center">
+      <h1 class="text-5xl font-extrabold text-rose-600 drop-shadow">💑 Sistema de Pontos do Casal</h1>
+      <p class="mt-2 text-zinc-600">Recompensas por gestos de amor e parceria</p>
+    </header>
 
-    <h3>📜 Lista de Recompensas</h3>
-    <ul id="rewardList"></ul>
-  </div>
+    <!-- Adicionar Pontos -->
+    <section id="add" class="bg-white rounded-xl shadow-lg p-6">
+      <h2 class="text-2xl font-bold text-rose-500 mb-4">Adicionar Pontos</h2>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <select id="userSelect" class="p-2 rounded border col-span-1">
+          <option value="Giovanna">Giovanna 🦊</option>
+          <option value="Junior">Junior 🐺</option>
+        </select>
+        <input type="number" id="pointsInput" placeholder="🔢 Pontos" class="p-2 rounded border col-span-1" />
+        <input type="text" id="reasonInput" placeholder="📝 Motivo" class="p-2 rounded border col-span-2" />
+      </div>
+      <button onclick="addPoints()" class="mt-4 bg-rose-500 hover:bg-rose-400 text-white font-semibold py-2 px-6 rounded w-full md:w-auto">➕ Adicionar</button>
+    </section>
 
-  <div class="section">
-    <h2>💞 Resgatar Recompensa</h2>
-    <select id="redeemUser">
-      <option value="Giovanna">Giovanna 🦊</option>
-      <option value="Junior">Junior 🐺</option>
-    </select>
-    <select id="redeemReward"></select>
-    <button onclick="redeemReward()">🎉 Resgatar 🎊</button>
-  </div>
+    <!-- Cadastrar Recompensas -->
+    <section id="rewards" class="bg-white rounded-xl shadow-lg p-6">
+      <h2 class="text-2xl font-bold text-rose-500 mb-4">Cadastrar Recompensas</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <input type="text" id="rewardName" placeholder="🏆 Nome da Recompensa" class="p-2 rounded border" />
+        <input type="number" id="rewardCost" placeholder="💰 Custo" class="p-2 rounded border" />
+        <button onclick="addReward()" class="bg-rose-500 hover:bg-rose-400 text-white font-semibold py-2 px-4 rounded">💝 Cadastrar</button>
+      </div>
+      <ul id="rewardList" class="mt-4 space-y-2 text-rose-600 list-disc pl-5"></ul>
+    </section>
 
-  <div class="section">
-    <h2>📊 Status Atual</h2>
-    <div id="status"></div>
+    <!-- Resgatar Recompensas -->
+    <section id="redeem" class="bg-white rounded-xl shadow-lg p-6">
+      <h2 class="text-2xl font-bold text-rose-500 mb-4">Resgatar Recompensa</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <select id="redeemUser" class="p-2 rounded border">
+          <option value="Giovanna">Giovanna 🦊</option>
+          <option value="Junior">Junior 🐺</option>
+        </select>
+        <select id="redeemReward" class="p-2 rounded border"></select>
+        <button onclick="redeemReward()" class="bg-green-500 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded">🎉 Resgatar</button>
+      </div>
+    </section>
+
+    <!-- Status Atual -->
+    <section id="status" class="bg-white rounded-xl shadow-lg p-6">
+      <h2 class="text-2xl font-bold text-rose-500 mb-4">Status Atual</h2>
+      <div id="status" class="grid md:grid-cols-2 gap-6"></div>
+    </section>
   </div>
 
   <script>
@@ -143,33 +97,38 @@
     }
 
     function updateStatus() {
-      let html = '';
-      for (const name of ['Giovanna', 'Junior']) {
+      const statusDiv = document.getElementById('status');
+      statusDiv.innerHTML = '';
+
+      ['Giovanna', 'Junior'].forEach(name => {
         const user = state[name];
-        html += `<h3>${name} - <span class="points">${user.points} pontos 💎</span></h3><ul>`;
-        for (const entry of user.history.slice().reverse()) {
-          html += `<li>${entry}</li>`;
-        }
-        html += '</ul>';
-      }
-      document.getElementById('status').innerHTML = html;
+        const card = document.createElement('div');
+        card.className = "bg-rose-100 rounded-lg p-4 shadow-inner";
+        card.innerHTML = `
+          <h3 class="text-xl font-bold text-rose-700">${name} - <span class="text-rose-600">${user.points} pts 💎</span></h3>
+          <ul class="mt-2 list-disc pl-5 text-zinc-700 space-y-1">
+            ${user.history.slice().reverse().map(entry => `<li>${entry}</li>`).join('')}
+          </ul>
+        `;
+        statusDiv.appendChild(card);
+      });
 
       const redeemReward = document.getElementById('redeemReward');
       redeemReward.innerHTML = '';
-      for (let reward of state.rewards) {
+      state.rewards.forEach(reward => {
         const option = document.createElement('option');
         option.value = reward.name;
         option.textContent = `🎁 ${reward.name} (${reward.cost} pts)`;
         redeemReward.appendChild(option);
-      }
+      });
 
       const rewardList = document.getElementById('rewardList');
       rewardList.innerHTML = '';
-      for (let reward of state.rewards) {
+      state.rewards.forEach(reward => {
         const li = document.createElement('li');
         li.textContent = `🎁 ${reward.name} - ${reward.cost} pts`;
         rewardList.appendChild(li);
-      }
+      });
 
       saveState();
     }
@@ -178,12 +137,7 @@
       const user = document.getElementById('userSelect').value;
       const points = parseInt(document.getElementById('pointsInput').value);
       const reason = document.getElementById('reasonInput').value.trim();
-
-      if (isNaN(points) || points <= 0 || !reason) {
-        alert("❗ Informe pontos válidos e um motivo.");
-        return;
-      }
-
+      if (isNaN(points) || points <= 0 || !reason) return alert("❗ Informe pontos válidos e um motivo.");
       state[user].points += points;
       state[user].history.push(`➕ ${points} pts: ${reason}`);
       updateStatus();
@@ -192,12 +146,7 @@
     function addReward() {
       const name = document.getElementById('rewardName').value.trim();
       const cost = parseInt(document.getElementById('rewardCost').value);
-
-      if (!name || isNaN(cost) || cost <= 0) {
-        alert("❗ Nome e custo válidos são obrigatórios.");
-        return;
-      }
-
+      if (!name || isNaN(cost) || cost <= 0) return alert("❗ Nome e custo válidos são obrigatórios.");
       state.rewards.push({ name, cost });
       updateStatus();
     }
@@ -206,20 +155,15 @@
       const user = document.getElementById('redeemUser').value;
       const rewardName = document.getElementById('redeemReward').value;
       const reward = state.rewards.find(r => r.name === rewardName);
-
       if (!reward) return alert("❌ Recompensa inválida.");
-
-      if (state[user].points < reward.cost) {
-        alert("⚠️ Pontos insuficientes.");
-        return;
-      }
-
+      if (state[user].points < reward.cost) return alert("⚠️ Pontos insuficientes.");
       state[user].points -= reward.cost;
-      state[user].history.push(`💸 ${reward.cost} pts: Resgatou "${reward.name}" 🎁`);
+      state[user].history.push(`💸 ${reward.cost} pts: Resgatou \"${reward.name}\" 🎁`);
       updateStatus();
     }
 
     updateStatus();
   </script>
+
 </body>
 </html>
