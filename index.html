@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sistema de Pontos do Casal 💖</title>
+  <style>
+    :root {
+      --bg: #fff0f5;
+      --primary: #d36ba6;
+      --secondary: #f7cfe3;
+      --text: #3d2c3c;
+      --accent: #ff9ac5;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 40px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary);
+      font-size: 2.5em;
+      margin-bottom: 30px;
+    }
+
+    .section {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    label, select, input, button {
+      margin-top: 10px;
+      margin-right: 10px;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    input[type="text"], input[type="number"], select {
+      background-color: var(--secondary);
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: var(--accent);
+    }
+
+    h2 {
+      color: var(--primary);
+    }
+
+    ul {
+      list-style-type: heart;
+      padding-left: 20px;
+    }
+
+    li::marker {
+      content: "💖 ";
+    }
+
+    h3 {
+      color: var(--text);
+      margin-top: 20px;
+    }
+
+    .points {
+      font-weight: bold;
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <h1>Sistema de Pontos do Casal 💑💖</h1>
+
+  <div class="section">
+    <h2>✨ Adicionar Pontos ✨</h2>
+    <select id="userSelect">
+      <option value="Giovanna">Giovanna 🦊</option>
+      <option value="Junior">Junior 🐺</option>
+    </select>
+    <input type="number" id="pointsInput" placeholder="🔢 Pontos" />
+    <input type="text" id="reasonInput" placeholder="📝 Motivo (ex: ajudou com algo 💕)" />
+    <button onclick="addPoints()">➕ Adicionar Pontos 💗</button>
+  </div>
+
+  <div class="section">
+    <h2>🎁 Recompensas</h2>
+    <input type="text" id="rewardName" placeholder="🏆 Nome da Recompensa (ex: Jantar 🍷)" />
+    <input type="number" id="rewardCost" placeholder="💰 Custo em Pontos" />
+    <button onclick="addReward()">💝 Cadastrar Recompensa</button>
+
+    <h3>📜 Lista de Recompensas</h3>
+    <ul id="rewardList"></ul>
+  </div>
+
+  <div class="section">
+    <h2>💞 Resgatar Recompensa</h2>
+    <select id="redeemUser">
+      <option value="Giovanna">Giovanna 🦊</option>
+      <option value="Junior">Junior 🐺</option>
+    </select>
+    <select id="redeemReward"></select>
+    <button onclick="redeemReward()">🎉 Resgatar 🎊</button>
+  </div>
+
+  <div class="section">
+    <h2>📊 Status Atual</h2>
+    <div id="status"></div>
+  </div>
+
+  <script>
+    const defaultState = {
+      Giovanna: { points: 0, history: [] },
+      Junior: { points: 0, history: [] },
+      rewards: []
+    };
+
+    let state = loadState();
+
+    function saveState() {
+      localStorage.setItem('casalPontos', JSON.stringify(state));
+    }
+
+    function loadState() {
+      const data = localStorage.getItem('casalPontos');
+      return data ? JSON.parse(data) : structuredClone(defaultState);
+    }
+
+    function updateStatus() {
+      let html = '';
+      for (const name of ['Giovanna', 'Junior']) {
+        const user = state[name];
+        html += `<h3>${name} - <span class="points">${user.points} pontos 💎</span></h3><ul>`;
+        for (const entry of user.history.slice().reverse()) {
+          html += `<li>${entry}</li>`;
+        }
+        html += '</ul>';
+      }
+      document.getElementById('status').innerHTML = html;
+
+      const redeemReward = document.getElementById('redeemReward');
+      redeemReward.innerHTML = '';
+      for (let reward of state.rewards) {
+        const option = document.createElement('option');
+        option.value = reward.name;
+        option.textContent = `🎁 ${reward.name} (${reward.cost} pts)`;
+        redeemReward.appendChild(option);
+      }
+
+      const rewardList = document.getElementById('rewardList');
+      rewardList.innerHTML = '';
+      for (let reward of state.rewards) {
+        const li = document.createElement('li');
+        li.textContent = `🎁 ${reward.name} - ${reward.cost} pts`;
+        rewardList.appendChild(li);
+      }
+
+      saveState();
+    }
+
+    function addPoints() {
+      const user = document.getElementById('userSelect').value;
+      const points = parseInt(document.getElementById('pointsInput').value);
+      const reason = document.getElementById('reasonInput').value.trim();
+
+      if (isNaN(points) || points <= 0 || !reason) {
+        alert("❗ Informe pontos válidos e um motivo.");
+        return;
+      }
+
+      state[user].points += points;
+      state[user].history.push(`➕ ${points} pts: ${reason}`);
+      updateStatus();
+    }
+
+    function addReward() {
+      const name = document.getElementById('rewardName').value.trim();
+      const cost = parseInt(document.getElementById('rewardCost').value);
+
+      if (!name || isNaN(cost) || cost <= 0) {
+        alert("❗ Nome e custo válidos são obrigatórios.");
+        return;
+      }
+
+      state.rewards.push({ name, cost });
+      updateStatus();
+    }
+
+    function redeemReward() {
+      const user = document.getElementById('redeemUser').value;
+      const rewardName = document.getElementById('redeemReward').value;
+      const reward = state.rewards.find(r => r.name === rewardName);
+
+      if (!reward) return alert("❌ Recompensa inválida.");
+
+      if (state[user].points < reward.cost) {
+        alert("⚠️ Pontos insuficientes.");
+        return;
+      }
+
+      state[user].points -= reward.cost;
+      state[user].history.push(`💸 ${reward.cost} pts: Resgatou "${reward.name}" 🎁`);
+      updateStatus();
+    }
+
+    updateStatus();
+  </script>
+</body>
+</html>
