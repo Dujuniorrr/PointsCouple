@@ -1,168 +1,236 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Pontos do Casal</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    html {
-      scroll-behavior: smooth;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Pontos do Casal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
 </head>
+
 <body class="bg-rose-50 text-zinc-800 font-sans min-h-screen">
 
-  <!-- Navbar -->
-  <nav class="bg-white shadow fixed w-full z-10">
-    <div class="max-w-4xl mx-auto flex justify-between items-center px-6 py-3">
-      <ul class="flex gap-4 text-sm text-zinc-700 font-medium">
-        <li><a href="#add" class="hover:text-rose-500">Adicionar</a></li>
-        <li><a href="#rewards" class="hover:text-rose-500">Recompensas</a></li>
-        <li><a href="#redeem" class="hover:text-rose-500">Resgatar</a></li>
-        <li><a href="#status" class="hover:text-rose-500">Status</a></li>
-      </ul>
+    <!-- Navbar -->
+    <nav class="bg-white shadow fixed w-full z-10">
+        <div class="max-w-4xl mx-auto flex justify-between items-center px-6 py-3">
+            <ul class="flex gap-4 text-sm text-zinc-700 font-medium">
+                <li><a href="#add" class="hover:text-rose-500">Adicionar</a></li>
+                <li><a href="#rewards" class="hover:text-rose-500">Recompensas</a></li>
+                <li><a href="#redeem" class="hover:text-rose-500">Resgatar</a></li>
+                <li><a href="#status" class="hover:text-rose-500">Status</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Conteúdo principal -->
+    <div class="max-w-4xl mx-auto pt-24 p-6 space-y-12">
+        <header class="text-center ">
+            <h1 class="text-5xl font-extrabold text-rose-600 drop-shadow">💑 Sistema de Pontos do Casal</h1>
+            <p class="mt-2 text-zinc-600">Recompensas por gestos de amor e parceria</p>
+        </header>
+
+        <!-- Adicionar Pontos -->
+        <section id="add" class="bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-rose-500 mb-4">Adicionar Pontos</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <select id="userSelect" class="p-2 rounded border col-span-2">
+                    <option value="Giovanna">Giovanna 🦊</option>
+                    <option value="Junior">Junior 🐺</option>
+                </select>
+                <input type="number" id="pointsInput" placeholder="🔢 Pontos" class="p-2 rounded border col-span-2" />
+                <input type="text" id="reasonInput" placeholder="📝 Motivo" class="p-2 rounded border col-span-2" />
+            </div>
+            <button onclick="addPoints()"
+                class="mt-4 bg-rose-500 hover:bg-rose-400 text-white font-semibold py-2 px-6 rounded w-full md:w-auto">➕
+                Adicionar</button>
+        </section>
+
+        <!-- Cadastrar Recompensas -->
+        <section id="rewards" class="bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-rose-500 mb-4">Cadastrar Recompensas</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <input type="text" id="rewardName" placeholder="🏆 Nome da Recompensa" class="p-2 rounded border" />
+                <input type="number" id="rewardCost" placeholder="💰 Custo" class="p-2 rounded border" />
+                <button onclick="addReward()"
+                    class="bg-rose-500 hover:bg-rose-400 text-white font-semibold py-2 px-4 rounded">💝
+                    Cadastrar</button>
+            </div>
+            <ul id="rewardList" class="mt-4 space-y-2 text-rose-600 list-disc pl-5"></ul>
+        </section>
+
+        <!-- Resgatar Recompensas -->
+        <section id="redeem" class="bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-rose-500 mb-4">Resgatar Recompensa</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <select id="redeemUser" class="p-2 rounded border">
+                    <option value="Giovanna">Giovanna 🦊</option>
+                    <option value="Junior">Junior 🐺</option>
+                </select>
+                <select id="redeemReward" class="p-2 rounded border"></select>
+                <button onclick="redeemReward()"
+                    class="bg-green-500 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded">🎉
+                    Resgatar</button>
+            </div>
+        </section>
+
+        <!-- Status Atual -->
+        <section id="status" class="bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-rose-500 mb-4">Status Atual</h2>
+            <div id="status" class="grid md:grid-cols-2 gap-6"></div>
+        </section>
     </div>
-  </nav>
 
-  <!-- Conteúdo principal -->
-  <div class="max-w-4xl mx-auto pt-24 p-6 space-y-12">
-    <header class="text-center mt-5 ">
-      <h1 class="text-5xl font-extrabold text-rose-600 drop-shadow">💑 Sistema de Pontos do Casal</h1>
-      <p class="mt-2 text-zinc-600">Recompensas por gestos de amor e parceria</p>
-    </header>
+    <script>
+        let state = null;
 
-    <!-- Adicionar Pontos -->
-    <section id="add" class="bg-white rounded-xl shadow-lg p-6">
-      <h2 class="text-2xl font-bold text-rose-500 mb-4">Adicionar Pontos</h2>
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <select id="userSelect" class="p-2 rounded border col-span-2">
-          <option value="Giovanna">Giovanna 🦊</option>
-          <option value="Junior">Junior 🐺</option>
-        </select>
-        <input type="number" id="pointsInput" placeholder="🔢 Pontos" class="p-2 rounded border col-span-2" />
-        <input type="text" id="reasonInput" placeholder="📝 Motivo" class="p-2 rounded border col-span-2" />
-      </div>
-      <button onclick="addPoints()" class="mt-4 bg-rose-500 hover:bg-rose-400 text-white font-semibold py-2 px-6 rounded w-full md:w-auto">➕ Adicionar</button>
-    </section>
+        async function loadStateFromApi() {
+            try {
+                const res = await fetch('https://couple.wuaze.com', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'getState' }),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    state = data.state;
+                    updateStatus();
+                } else {
+                    alert('❌ Erro ao carregar dados: ' + data.message);
+                }
+            } catch {
+                alert('❌ Erro ao conectar com o servidor.');
+            }
+        }
 
-    <!-- Cadastrar Recompensas -->
-    <section id="rewards" class="bg-white rounded-xl shadow-lg p-6">
-      <h2 class="text-2xl font-bold text-rose-500 mb-4">Cadastrar Recompensas</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <input type="text" id="rewardName" placeholder="🏆 Nome da Recompensa" class="p-2 rounded border" />
-        <input type="number" id="rewardCost" placeholder="💰 Custo" class="p-2 rounded border" />
-        <button onclick="addReward()" class="bg-rose-500 hover:bg-rose-400 text-white font-semibold py-2 px-4 rounded">💝 Cadastrar</button>
-      </div>
-      <ul id="rewardList" class="mt-4 space-y-2 text-rose-600 list-disc pl-5"></ul>
-    </section>
+        function updateStatus() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = '';
 
-    <!-- Resgatar Recompensas -->
-    <section id="redeem" class="bg-white rounded-xl shadow-lg p-6">
-      <h2 class="text-2xl font-bold text-rose-500 mb-4">Resgatar Recompensa</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <select id="redeemUser" class="p-2 rounded border">
-          <option value="Giovanna">Giovanna 🦊</option>
-          <option value="Junior">Junior 🐺</option>
-        </select>
-        <select id="redeemReward" class="p-2 rounded border"></select>
-        <button onclick="redeemReward()" class="bg-green-500 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded">🎉 Resgatar</button>
-      </div>
-    </section>
+            ['Giovanna', 'Junior'].forEach(name => {
+                const user = state[name];
+                const card = document.createElement('div');
+                card.className = "bg-rose-100 rounded-lg p-4 shadow-inner";
+                card.innerHTML = `
+      <h3 class="text-xl font-bold text-rose-700">${name} - <span class="text-rose-600">${user.points} pts 💎</span></h3>
+      <ul class="mt-2 list-disc pl-5 text-zinc-700 space-y-1">
+        ${user.history.slice().reverse().map(entry => `<li>${entry}</li>`).join('')}
+      </ul>
+    `;
+                statusDiv.appendChild(card);
+            });
 
-    <!-- Status Atual -->
-    <section id="status" class="bg-white rounded-xl shadow-lg p-6">
-      <h2 class="text-2xl font-bold text-rose-500 mb-4">Status Atual</h2>
-      <div id="status" class="grid md:grid-cols-2 gap-6"></div>
-    </section>
-  </div>
+            const redeemReward = document.getElementById('redeemReward');
+            redeemReward.innerHTML = '';
+            state.rewards.forEach(reward => {
+                const option = document.createElement('option');
+                option.value = reward.name;
+                option.textContent = `🎁 ${reward.name} (${reward.cost} pts)`;
+                redeemReward.appendChild(option);
+            });
 
-  <script>
-    const defaultState = {
-      Giovanna: { points: 0, history: [] },
-      Junior: { points: 0, history: [] },
-      rewards: []
-    };
+            const rewardList = document.getElementById('rewardList');
+            rewardList.innerHTML = '';
+            state.rewards.forEach(reward => {
+                const li = document.createElement('li');
+                li.textContent = `🎁 ${reward.name} - ${reward.cost} pts`;
+                rewardList.appendChild(li);
+            });
+        }
 
-    let state = loadState();
+        async function addPoints() {
+            const user = document.getElementById('userSelect').value;
+            const points = parseInt(document.getElementById('pointsInput').value);
+            const reason = document.getElementById('reasonInput').value.trim();
 
-    function saveState() {
-      localStorage.setItem('casalPontos', JSON.stringify(state));
-    }
+            if (isNaN(points) || points <= 0 || !reason) {
+                return alert("❗ Informe pontos válidos e um motivo.");
+            }
 
-    function loadState() {
-      const data = localStorage.getItem('casalPontos');
-      return data ? JSON.parse(data) : structuredClone(defaultState);
-    }
+            const payload = { action: 'addPoints', user, points, reason };
 
-    function updateStatus() {
-      const statusDiv = document.getElementById('status');
-      statusDiv.innerHTML = '';
+            try {
+                const res = await fetch('https://couple.wuaze.com', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('✅ Pontos adicionados com sucesso!');
+                    await loadStateFromApi();
+                } else {
+                    alert('❌ Erro: ' + data.message);
+                }
+            } catch {
+                alert('❌ Erro ao conectar com o servidor.');
+            }
+        }
 
-      ['Giovanna', 'Junior'].forEach(name => {
-        const user = state[name];
-        const card = document.createElement('div');
-        card.className = "bg-rose-100 rounded-lg p-4 shadow-inner";
-        card.innerHTML = `
-          <h3 class="text-xl font-bold text-rose-700">${name} - <span class="text-rose-600">${user.points} pts 💎</span></h3>
-          <ul class="mt-2 list-disc pl-5 text-zinc-700 space-y-1">
-            ${user.history.slice().reverse().map(entry => `<li>${entry}</li>`).join('')}
-          </ul>
-        `;
-        statusDiv.appendChild(card);
-      });
+        async function addReward() {
+            const name = document.getElementById('rewardName').value.trim();
+            const cost = parseInt(document.getElementById('rewardCost').value);
 
-      const redeemReward = document.getElementById('redeemReward');
-      redeemReward.innerHTML = '';
-      state.rewards.forEach(reward => {
-        const option = document.createElement('option');
-        option.value = reward.name;
-        option.textContent = `🎁 ${reward.name} (${reward.cost} pts)`;
-        redeemReward.appendChild(option);
-      });
+            if (!name || isNaN(cost) || cost <= 0) {
+                return alert("❗ Nome e custo válidos são obrigatórios.");
+            }
 
-      const rewardList = document.getElementById('rewardList');
-      rewardList.innerHTML = '';
-      state.rewards.forEach(reward => {
-        const li = document.createElement('li');
-        li.textContent = `🎁 ${reward.name} - ${reward.cost} pts`;
-        rewardList.appendChild(li);
-      });
+            const payload = { action: 'addReward', name, cost };
 
-      saveState();
-    }
+            try {
+                const res = await fetch('https://couple.wuaze.com', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('✅ Recompensa cadastrada com sucesso!');
+                    await loadStateFromApi();
+                } else {
+                    alert('❌ Erro: ' + data.message);
+                }
+            } catch {
+                alert('❌ Erro ao conectar com o servidor.');
+            }
+        }
 
-    function addPoints() {
-      const user = document.getElementById('userSelect').value;
-      const points = parseInt(document.getElementById('pointsInput').value);
-      const reason = document.getElementById('reasonInput').value.trim();
-      if (isNaN(points) || points <= 0 || !reason) return alert("❗ Informe pontos válidos e um motivo.");
-      state[user].points += points;
-      state[user].history.push(`➕ ${points} pts: ${reason}`);
-      updateStatus();
-    }
+        async function redeemReward() {
+            const user = document.getElementById('redeemUser').value;
+            const rewardName = document.getElementById('redeemReward').value;
 
-    function addReward() {
-      const name = document.getElementById('rewardName').value.trim();
-      const cost = parseInt(document.getElementById('rewardCost').value);
-      if (!name || isNaN(cost) || cost <= 0) return alert("❗ Nome e custo válidos são obrigatórios.");
-      state.rewards.push({ name, cost });
-      updateStatus();
-    }
+            if (!user || !rewardName) {
+                return alert("❗ Selecione usuário e recompensa.");
+            }
 
-    function redeemReward() {
-      const user = document.getElementById('redeemUser').value;
-      const rewardName = document.getElementById('redeemReward').value;
-      const reward = state.rewards.find(r => r.name === rewardName);
-      if (!reward) return alert("❌ Recompensa inválida.");
-      if (state[user].points < reward.cost) return alert("⚠️ Pontos insuficientes.");
-      state[user].points -= reward.cost;
-      state[user].history.push(`💸 ${reward.cost} pts: Resgatou \"${reward.name}\" 🎁`);
-      updateStatus();
-    }
+            const payload = { action: 'redeemReward', user, rewardName };
 
-    updateStatus();
-  </script>
+            try {
+                const res = await fetch('https://couple.wuaze.com', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('🎉 Recompensa resgatada com sucesso!');
+                    await loadStateFromApi();
+                } else {
+                    alert('❌ Erro: ' + data.message);
+                }
+            } catch {
+                alert('❌ Erro ao conectar com o servidor.');
+            }
+        }
 
+        // Carrega estado inicial
+        loadStateFromApi();
+
+    </script>
 </body>
+
 </html>
