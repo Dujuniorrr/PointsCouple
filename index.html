@@ -16,7 +16,6 @@
   <!-- Navbar -->
   <nav class="bg-white shadow fixed w-full z-10">
     <div class="max-w-4xl mx-auto flex justify-between items-center px-6 py-3">
-      <span class="text-rose-600 font-bold text-xl">💖 Casal Points</span>
       <ul class="flex gap-4 text-sm text-zinc-700 font-medium">
         <li><a href="#add" class="hover:text-rose-500">Adicionar</a></li>
         <li><a href="#rewards" class="hover:text-rose-500">Recompensas</a></li>
@@ -28,7 +27,7 @@
 
   <!-- Conteúdo principal -->
   <div class="max-w-4xl mx-auto pt-24 p-6 space-y-12">
-    <header class="text-center">
+    <header class="text-center mt-5 ">
       <h1 class="text-5xl font-extrabold text-rose-600 drop-shadow">💑 Sistema de Pontos do Casal</h1>
       <p class="mt-2 text-zinc-600">Recompensas por gestos de amor e parceria</p>
     </header>
@@ -37,11 +36,11 @@
     <section id="add" class="bg-white rounded-xl shadow-lg p-6">
       <h2 class="text-2xl font-bold text-rose-500 mb-4">Adicionar Pontos</h2>
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <select id="userSelect" class="p-2 rounded border col-span-1">
+        <select id="userSelect" class="p-2 rounded border col-span-2">
           <option value="Giovanna">Giovanna 🦊</option>
           <option value="Junior">Junior 🐺</option>
         </select>
-        <input type="number" id="pointsInput" placeholder="🔢 Pontos" class="p-2 rounded border col-span-1" />
+        <input type="number" id="pointsInput" placeholder="🔢 Pontos" class="p-2 rounded border col-span-2" />
         <input type="text" id="reasonInput" placeholder="📝 Motivo" class="p-2 rounded border col-span-2" />
       </div>
       <button onclick="addPoints()" class="mt-4 bg-rose-500 hover:bg-rose-400 text-white font-semibold py-2 px-6 rounded w-full md:w-auto">➕ Adicionar</button>
